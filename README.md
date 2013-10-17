@@ -66,7 +66,7 @@ First we write the drawRect: method that we have from NSView base class; then we
 }
 ```
 
-We have defined two methods for our drawRect: method. We the one to fill the whole are in red:
+We have defined two methods for our drawRect: method. One of the methods is to fill the whole are in red:
 
 ``` objective-c
 -(void) fillBackgroundColorOfRect:(NSRect) rect {
@@ -75,7 +75,7 @@ We have defined two methods for our drawRect: method. We the one to fill the who
 }
 ```
 
-And then we write the longer method to draw a line from one corner to the other:
+And the other method is to draw a line from one corner to the other:
 
 ``` objective-c
 -(void) drawLinesInRect:(NSRect) rect {
