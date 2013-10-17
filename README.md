@@ -1,4 +1,97 @@
-cocoa_drawing
+Cocoa Drawing
 =============
 
-Simple drawing on a cocoa app to learn the minimum needed to draw some vector graphics on a cocoa app, let's use the desktop for a change
+This is an exercise on learning how to write a basic drawing app using cocoa on the mac. Let's use the desktop for a change.
+
+If you use XCode to give you a basic cocoa app, uncheck core data since we will not need it. Then you end up just with an AppDelegate that has access to a window object.
+
+So we will create a custom view (File -> New -> Objective C class - inherit from NSView) and call it DrawingView. That is where we will draw some lines soon. For now let's just have it blank.
+
+``` objective-c
+#import "DrawingView.h"
+
+@implementation DrawingView
+
+@end
+```
+
+
+In the header file DrawingView.h we (1) add the AppKit framework, (2) import our custom view file DrawingView.h and (3) set a property that will hold our custom view:
+
+``` objective-c
+#import <Cocoa/Cocoa.h>
+#import <AppKit/AppKit.h>
+#import "DrawingView.h"
+
+@interface AppDelegate : NSObject <NSApplicationDelegate>
+
+@property (assign) IBOutlet NSWindow *window;
+
+@property DrawingView *drawingView;
+
+@end
+```
+
+
+``` objective-c
+#import "AppDelegate.h"
+
+@implementation AppDelegate
+
+- (void)applicationDidFinishLaunching:(NSNotification *)aNotification
+{
+    // instantiate the view we will use to draw
+    self.drawingView = [[DrawingView alloc] initWithFrame:self.window.frame];
+    
+    // set that view to be the content view for the default window
+    [self.window setContentView:self.drawingView];
+    
+    
+}
+
+@end
+```
+
+If you run your app, nothing happens yet, all we get is the default window. Now let's code our view. We will set the background to red in our view and we will draw a line from the upper right corner to the lower left corner.
+
+First we write the drawRect: method that we have from NSView class and we add the code that we need to draw there. Cocoa takes care of running that method whenever it needs to run; if we need to run it ourselves, we run it with the setNeedsDisplay: method. But we will not need to for this simple exercise.
+
+``` objective-c
+-(void) drawRect:(NSRect)dirtyRect {
+    [self fillBackgroundColorOfRect:dirtyRect];
+    [self drawLinesInRect:dirtyRect];
+}
+```
+
+We have defined two methods for our drawRect: method. We the one to fill the whole are in red:
+
+``` objective-c
+-(void) fillBackgroundColorOfRect:(NSRect) rect {
+    [[NSColor redColor] set];
+    [NSBezierPath fillRect:rect];
+}
+```
+
+And then we write the longer method to draw a line from one corner to the other:
+
+``` objective-c
+-(void) drawLinesInRect:(NSRect) rect {
+    NSBezierPath *path = [NSBezierPath bezierPath];
+    [path setLineWidth:4.0];
+    
+    NSPoint startPoint = rect.origin;
+    NSPoint endPoint = CGPointMake(rect.origin.x + rect.size.width, rect.origin.y + rect.size.height);
+    
+    [path moveToPoint:startPoint];
+    [path lineToPoint:endPoint];
+    
+    [[NSColor whiteColor] set];
+    [path stroke];
+    
+}
+```
+
+If everything worked for you, you should see a red window with a white line across and the line resizes as you resize the window, since we are always redrawing taking the size of the window.
+
+That's it. Now I can work on drawing and moving a trebuchet, which always appeals to me when I do graphics.
+
